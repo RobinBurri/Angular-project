@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'angular-app';
+  currentPage = 'recipe';
+
+  onPageChange(page: string){
+    this.currentPage = page;
+  }
 }

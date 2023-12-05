@@ -3,6 +3,12 @@
     <app-recipes-list></app-recipes-list>
   </div>
   <div class="col-md-7">
-    <app-recipe-detail></app-recipe-detail>
+    <app-recipe-detail
+      *ngIf="selectedRecipe; else defaultText"
+      [recipe]="selectedRecipe"
+    ></app-recipe-detail>
+    <ng-template #defaultText>
+      <p>Please select a recipe.</p>
+    </ng-template>
   </div>
 </div>
