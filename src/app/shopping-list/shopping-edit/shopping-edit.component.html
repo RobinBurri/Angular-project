@@ -1,28 +1,44 @@
 <div class="row">
   <div class="col-xs-12">
-    <form>
+    <form [formGroup]="ingerdientForm" (ngSubmit)="onAddItem()">
       <div class="row">
         <div class="col-sm-5 form-group">
           <label for="name">Name</label>
-          <input type="text" id="name" class="form-control" #nameInput />
+          <input
+            type="text"
+            id="name"
+            class="form-control"
+            formControlName="ingerdientName"
+          />
         </div>
         <div class="col-sm-2 form-group">
           <label for="amount">Amount</label>
           <input
             type="number"
-            name="amount"
+            formControlName="ingredientAmount"
             id="amount"
             class="form-control"
-            #amountInput
           />
         </div>
       </div>
       <div class="row">
         <div class="col-xs-12">
           <div class="btn-toolbar">
-            <button type="submit" class="btn btn-success" (click)="onAddItem()">Add</button>
-            <button type="button" class="btn btn-danger" (click)="onDeleteItem()">Delete</button>
-            <button type="button" class="btn btn-primary" (click)="onClearItem()">Clear</button>
+            <button type="submit" class="btn btn-success" [disabled]="!ingerdientForm.valid">Add</button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="onDeleteItem()"
+            >
+              Delete
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="onClearItem()"
+            >
+              Clear
+            </button>
           </div>
         </div>
       </div>

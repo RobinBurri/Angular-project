@@ -6,7 +6,8 @@ import { Ingredients } from '../shared/ingredient.model';
   providedIn: 'root',
 })
 export class RecipeService {
-  recipes: Recipe[] = [
+
+  private recipes: Recipe[] = [
     new Recipe(
       'A Test Recipe',
       'This is a simple test',

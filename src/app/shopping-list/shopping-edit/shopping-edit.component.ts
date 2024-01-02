@@ -1,6 +1,12 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { ShoppingListService } from '../shopping-list.service';
 import { Ingredients } from '../../shared/ingredient.model';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-shopping-edit',
@@ -8,18 +14,35 @@ import { Ingredients } from '../../shared/ingredient.model';
   styleUrl: './shopping-edit.component.css',
 })
 export class ShoppingEditComponent {
-  @ViewChild('nameInput') nameInputRef: ElementRef;
-  @ViewChild('amountInput') amountInputRef: ElementRef;
+  ingerdientForm: FormGroup;
 
-  constructor(private shoppingService: ShoppingListService) {}
+  constructor(
+    private shoppingService: ShoppingListService,
+    private formBuilder: FormBuilder
+  ) {
+    this.ingerdientForm = this.formBuilder.group({
+      ingerdientName: new FormControl(null, [
+        Validators.required,
+        Validators.minLength(3),
+      ]),
+      ingredientAmount: new FormControl(null, [
+        Validators.required,
+        Validators.min(1),
+      ]),
+    });
+  }
 
   onAddItem() {
-    const newIngredient = new Ingredients(
-      this.nameInputRef.nativeElement.value,
-      this.amountInputRef.nativeElement.value
-    );
+    if (!this.ingerdientForm.valid) {
+      return;
+    }
+    const { ingerdientName, ingredientAmount } = this.ingerdientForm.value;
+    const newIngredient = new Ingredients(ingerdientName, ingredientAmount);
     this.shoppingService.addIngredient(newIngredient);
   }
   onDeleteItem() {}
-  onClearItem() {}
+  onClearItem() {
+    this.ingerdientForm.get('ingerdientName').setValue('');
+    this.ingerdientForm.get('ingredientAmount').setValue('');
+  }
 }
