@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xs-12">
-    <form [formGroup]="ingerdientForm" (ngSubmit)="onAddItem()">
+    <form [formGroup]="ingredientForm" (ngSubmit)="onAddItem()">
       <div class="row">
         <div class="col-sm-5 form-group">
           <label for="name">Name</label>
@@ -8,7 +8,7 @@
             type="text"
             id="name"
             class="form-control"
-            formControlName="ingerdientName"
+            formControlName="ingredientName"
           />
         </div>
         <div class="col-sm-2 form-group">
@@ -24,11 +24,12 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="btn-toolbar">
-            <button type="submit" class="btn btn-success" [disabled]="!ingerdientForm.valid">Add</button>
-            <button
+            <button type="submit" class="btn btn-success" [disabled]="!ingredientForm.valid">Add</button>
+            <button 
               type="button"
               class="btn btn-danger"
               (click)="onDeleteItem()"
+              *ngIf="editMode"
             >
               Delete
             </button>

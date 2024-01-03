@@ -11,11 +11,15 @@ export class ShoppingListService {
 
   private ingredients: Ingredients[] = [
     new Ingredients('Apples', 5),
-    new Ingredients('Tomatos', 3),
+    new Ingredients('Tomatoes', 3),
   ];
 
   getIngredients() {
     return this.ingredients.slice();
+  }
+
+  getIngredient(index: number) {
+    return this.ingredients[index];
   }
 
   addIngredient(ingredient: Ingredients) {
@@ -29,5 +33,15 @@ export class ShoppingListService {
       this.ingredients.push(ingredient);
     }
     this.ingredientsChanged.next(this.ingredients.slice());
+  }
+
+  removeIngredient(ingredientName: string) {
+    const existingIngredientIndex = this.ingredients.findIndex(
+      (ing) => ing.name === ingredientName
+    );
+    if (existingIngredientIndex !== -1) {
+      this.ingredients.splice(existingIngredientIndex, 1);
+      this.ingredientsChanged.next(this.ingredients.slice());
+    }
   }
 }

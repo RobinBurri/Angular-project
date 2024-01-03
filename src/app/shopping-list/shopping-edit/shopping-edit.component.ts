@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ShoppingListService } from '../shopping-list.service';
 import { Ingredients } from '../../shared/ingredient.model';
 import {
@@ -7,21 +7,24 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-shopping-edit',
   templateUrl: './shopping-edit.component.html',
   styleUrl: './shopping-edit.component.css',
 })
-export class ShoppingEditComponent {
-  ingerdientForm: FormGroup;
+export class ShoppingEditComponent implements OnInit, OnDestroy {
+  ingredientForm: FormGroup;
+  startedEditingSub: Subscription;
+  editMode = false;
 
   constructor(
     private shoppingService: ShoppingListService,
     private formBuilder: FormBuilder
   ) {
-    this.ingerdientForm = this.formBuilder.group({
-      ingerdientName: new FormControl(null, [
+    this.ingredientForm = this.formBuilder.group({
+      ingredientName: new FormControl(null, [
         Validators.required,
         Validators.minLength(3),
       ]),
@@ -32,17 +35,37 @@ export class ShoppingEditComponent {
     });
   }
 
+  ngOnInit(): void {
+    this.startedEditingSub = this.shoppingService.startedEditing.subscribe((index: number) => {
+      this.editMode = true;
+      const ingredient = this.shoppingService.getIngredient(index);
+      this.ingredientForm.get('ingredientName').setValue(ingredient.name);
+      this.ingredientForm.get('ingredientAmount').setValue(ingredient.amount);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.startedEditingSub.unsubscribe();
+  }
+
   onAddItem() {
-    if (!this.ingerdientForm.valid) {
+    if (!this.ingredientForm.valid) {
       return;
     }
-    const { ingerdientName, ingredientAmount } = this.ingerdientForm.value;
-    const newIngredient = new Ingredients(ingerdientName, ingredientAmount);
+    const { ingredientName: ingredientName, ingredientAmount } = this.ingredientForm.value;
+    const newIngredient = new Ingredients(ingredientName, ingredientAmount);
     this.shoppingService.addIngredient(newIngredient);
+    this.onClearItem();
   }
-  onDeleteItem() {}
+
+  onDeleteItem() {
+    this.shoppingService.removeIngredient(this.ingredientForm.value.ingredientName);
+    this.onClearItem();
+  }
+
+
   onClearItem() {
-    this.ingerdientForm.get('ingerdientName').setValue('');
-    this.ingerdientForm.get('ingredientAmount').setValue('');
+    this.ingredientForm.reset();
+    this.editMode = false;
   }
 }
