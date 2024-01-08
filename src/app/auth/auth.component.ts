@@ -14,10 +14,8 @@ export class AuthComponent implements OnInit {
   isLoginMode = true;
   isLoading = false;
   errorMessage = '';
-  authObs: Observable<AuthResponseData>;
 
-  constructor(private authService: AuthService) {}
-  ngOnInit(): void {
+  constructor(private authService: AuthService) {
     this.authForm = new FormGroup({
       email: new FormControl(null, [Validators.required, Validators.email]),
       password: new FormControl(null, [
@@ -26,6 +24,7 @@ export class AuthComponent implements OnInit {
       ]),
     });
   }
+  ngOnInit(): void {}
 
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
@@ -39,15 +38,15 @@ export class AuthComponent implements OnInit {
     const email = this.authForm.value.email;
     const password = this.authForm.value.password;
 
-    let authObs: Observable<AuthResponseData>;
+    let authObs: Observable<AuthResponseData> = new Observable();
 
     if (this.isLoginMode) {
-      this.authObs = this.authService.login(email, password);
+      authObs = this.authService.login(email, password);
     } else {
-      this.authObs = this.authService.signup(email, password);
+      authObs = this.authService.signup(email, password);
     }
 
-    this.authObs.subscribe({
+    authObs.subscribe({
       next: (responseData) => {
         console.log(responseData);
       },

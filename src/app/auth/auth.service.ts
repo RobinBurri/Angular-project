@@ -1,47 +1,58 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
+import { Subject, catchError, tap, throwError } from 'rxjs';
 import AuthResponseData from './authResponse.model';
+import { User } from './user.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  user = new Subject<User>();
   constructor(private http: HttpClient) {}
 
   signup(email: string, password: string) {
-    const bodyPayload = {
-      email: email,
-      password: password,
-      returnSecureToken: true,
-    };
-    console.log(bodyPayload);
-
     return this.http
       .post<AuthResponseData>(
         'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCSN2M3globfo7ViBbfAfWzbG9bOoSyBmY',
-        bodyPayload
+        { email: email, password: password, returnSecureToken: true }
       )
-      .pipe(catchError(this.handleError));
+      .pipe(
+        catchError(this.handleError),
+        tap((resData) => {
+          this.handleAuthentification(resData);
+        })
+      );
   }
 
   login(email: string, password: string) {
-    const bodyPayload = {
-      email: email,
-      password: password,
-      returnSecureToken: true,
-    };
-
-    console.log(bodyPayload);
     return this.http
       .post<AuthResponseData>(
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCSN2M3globfo7ViBbfAfWzbG9bOoSyBmY',
-        bodyPayload
+        { email: email, password: password, returnSecureToken: true }
       )
-      .pipe(catchError(this.handleError));
+      .pipe(
+        catchError(this.handleError),
+        tap((resData) => {
+          this.handleAuthentification(resData);
+        })
+      );
   }
 
-  handleError(errorRes: any) {
+  private handleAuthentification(resData: AuthResponseData) {
+    const expirationDate = new Date(
+      new Date().getTime() + +resData.expiresIn * 1000
+    );
+    const newUser = new User(
+      resData.email,
+      resData.localId,
+      resData.idToken,
+      expirationDate
+    );
+    this.user.next(newUser);
+  }
+
+  private handleError(errorRes: any) {
     console.log(errorRes);
     switch (errorRes.error.error.message) {
       case 'EMAIL_EXISTS':

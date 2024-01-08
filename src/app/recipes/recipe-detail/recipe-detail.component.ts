@@ -10,8 +10,8 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
   styleUrl: './recipe-detail.component.css',
 })
 export class RecipeDetailComponent implements OnInit {
-  recipe: Recipe;
-  id: number;
+  recipe!: Recipe;
+  id!: number;
 
   constructor(
     private shoppingService: ShoppingListService,

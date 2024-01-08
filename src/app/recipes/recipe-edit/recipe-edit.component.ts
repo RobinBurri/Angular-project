@@ -9,10 +9,10 @@ import { RecipeService } from '../recipe.service';
   styleUrl: './recipe-edit.component.css',
 })
 export class RecipeEditComponent implements OnInit {
-  id: number;
+  id!: number;
   editMode = false;
   formIsValid = false;
-  recipeForm: FormGroup;
+  recipeForm!: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,7 +31,7 @@ export class RecipeEditComponent implements OnInit {
     let recipeName = '';
     let recipeImagePath = '';
     let recipeDescription = '';
-    let recipeIngredients = new FormArray([]);
+    let recipeIngredients = new FormArray<FormGroup>([]);
 
     if (this.editMode) {
       const recipe = this.recipeService.getRecipesById(this.id);
@@ -55,6 +55,8 @@ export class RecipeEditComponent implements OnInit {
         }
       }
     }
+
+    FormControl<string | null>;
 
     this.recipeForm = new FormGroup({
       name: new FormControl(recipeName, [

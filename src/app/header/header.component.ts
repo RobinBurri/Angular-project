@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 export class HeaderComponent implements OnInit, OnDestroy {
   constructor(private dataStorageService: DataStorageService) {}
   collapsed = true;
-  errorSubscription: Subscription;
+  errorSubscription = new Subscription();
 
   ngOnInit() {
     this.errorSubscription =

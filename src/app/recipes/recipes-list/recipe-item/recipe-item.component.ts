@@ -7,6 +7,6 @@ import { Recipe } from '../../recipe.model';
   styleUrl: './recipe-item.component.css',
 })
 export class RecipeItemComponent {
-  @Input() recipe: Recipe;
-  @Input() index: number;
+  @Input() recipe!: Recipe;
+  @Input() index!: number;
 }

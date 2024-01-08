@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 })
 export class ShoppingEditComponent implements OnInit, OnDestroy {
   ingredientForm: FormGroup;
-  startedEditingSub: Subscription;
+  startedEditingSub!: Subscription;
   editMode = false;
 
   constructor(
@@ -36,12 +36,16 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.startedEditingSub = this.shoppingService.startedEditing.subscribe((index: number) => {
-      this.editMode = true;
-      const ingredient = this.shoppingService.getIngredient(index);
-      this.ingredientForm.get('ingredientName').setValue(ingredient.name);
-      this.ingredientForm.get('ingredientAmount').setValue(ingredient.amount);
-    });
+    this.startedEditingSub = this.shoppingService.startedEditing.subscribe(
+      (index: number) => {
+        this.editMode = true;
+        const ingredient = this.shoppingService.getIngredient(index);
+        this.ingredientForm.get('ingredientName')!.setValue(ingredient.name);
+        this.ingredientForm
+          .get('ingredientAmount')!
+          .setValue(ingredient.amount);
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -52,17 +56,19 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
     if (!this.ingredientForm.valid) {
       return;
     }
-    const { ingredientName: ingredientName, ingredientAmount } = this.ingredientForm.value;
+    const { ingredientName: ingredientName, ingredientAmount } =
+      this.ingredientForm.value;
     const newIngredient = new Ingredients(ingredientName, ingredientAmount);
     this.shoppingService.addIngredient(newIngredient);
     this.onClearItem();
   }
 
   onDeleteItem() {
-    this.shoppingService.removeIngredient(this.ingredientForm.value.ingredientName);
+    this.shoppingService.removeIngredient(
+      this.ingredientForm.value.ingredientName
+    );
     this.onClearItem();
   }
-
 
   onClearItem() {
     this.ingredientForm.reset();
