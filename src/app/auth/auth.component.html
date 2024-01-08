@@ -3,6 +3,9 @@
     <div *ngIf="isLoading" style="text-align: center">
       <app-loading-spinner></app-loading-spinner>
     </div>
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      <p [ngStyle]="{ color: 'red' }">{{ errorMessage }}</p>
+    </div>
 
     <form *ngIf="!isLoading" [formGroup]="authForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
