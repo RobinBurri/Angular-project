@@ -31,6 +31,7 @@ export class AuthComponent implements OnInit {
     this.isLoginMode = !this.isLoginMode;
   }
 
+
   onSubmit() {
     if (this.authForm.invalid) {
       return;

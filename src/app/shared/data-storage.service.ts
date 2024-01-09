@@ -8,7 +8,10 @@ import { Subject, map, tap } from 'rxjs';
   providedIn: 'root',
 })
 export class DataStorageService {
-  constructor(private http: HttpClient, private recipeService: RecipeService) {}
+  constructor(
+    private http: HttpClient,
+    private recipeService: RecipeService,
+  ) {}
 
   errorSubscription = new Subject<string>();
 
