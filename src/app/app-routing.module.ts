@@ -6,9 +6,9 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
 import { RecipeDetailComponent } from './recipes/recipe-detail/recipe-detail.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
-import { recipesResolverService } from './recipes/recipes.resolver.service';
 import { AuthComponent } from './auth/auth.component';
 import { authGuardFn } from './auth/auth.guard';
+import { recipesResolver } from './recipes/recipes.resolver';
 
 const appRoutes: Routes = [
   {
@@ -21,12 +21,12 @@ const appRoutes: Routes = [
       {
         path: ':id',
         component: RecipeDetailComponent,
-        resolve: [recipesResolverService],
+        resolve: [recipesResolver],
       },
       {
         path: ':id/edit',
         component: RecipeEditComponent,
-        resolve: [recipesResolverService],
+        resolve: [recipesResolver],
       },
     ],
   },
