@@ -16,5 +16,3 @@ export const authGuardFn : CanActivateFn =
     return router.createUrlTree(['/auth']);
   }));
 };
-
-
